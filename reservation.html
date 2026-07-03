@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve a Table — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Book a Table</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main style="padding-top:68px">
+<section id="reservation">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">Reservations</span>
+            <h2>Book a Table</h2>
+            <p>Reserve your spot — we'll take care of the rest.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="reservation-wrap fade-in">
+            <div class="res-info">
+                <h3>We'd love<br>to host you.</h3>
+                <p>Whether it's a quiet dinner for two or a celebration with the whole family, our team is here to make it memorable.</p>
+                <ul class="hours-list">
+                    <li><span class="day">Monday – Friday</span><span class="time">11:00 AM – 10:00 PM</span></li>
+                    <li><span class="day">Saturday</span><span class="time">10:00 AM – 11:00 PM</span></li>
+                    <li><span class="day">Sunday</span><span class="time">10:00 AM – 9:00 PM</span></li>
+                    <li><span class="day">Kitchen closes</span><span class="time">30 min before close</span></li>
+                </ul>
+            </div>
+            <div>
+                <div class="success-banner" id="res-success" role="alert">
+                    <span>✓</span> Your table is booked! We'll send a confirmation shortly.
+                </div>
+                <form class="res-form" id="reservation-form" novalidate>
+                    <div class="form-group">
+                        <label for="res-name">Full Name</label>
+                        <input type="text" id="res-name" name="name" placeholder="Jane Smith" required>
+                        <span class="field-error">Please enter your name.</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="res-email">Email</label>
+                            <input type="email" id="res-email" name="email" placeholder="jane@example.com" required>
+                            <span class="field-error">Valid email required.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-party">Party Size</label>
+                            <select id="res-party" name="guests" required>
+                                <option value="">Select</option>
+                                <option value="1">1 person</option>
+                                <option value="2">2 people</option>
+                                <option value="3">3 people</option>
+                                <option value="4">4 people</option>
+                                <option value="5">5 people</option>
+                                <option value="6+">6+ people</option>
+                            </select>
+                            <span class="field-error">Please select party size.</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="res-date">Date</label>
+                            <input type="date" id="res-date" name="date" required>
+                            <span class="field-error">Please pick a date.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-time">Time</label>
+                            <input type="time" id="res-time" name="time" min="11:00" max="22:00" required>
+                            <span class="field-error">Please pick a time.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-requests">Special Requests <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+                        <textarea id="res-requests" name="requests" placeholder="Allergies, high chair, anniversary setup…"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Confirm Reservation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Ember<span>&</span>Salt</div><p>Fine dining where craft and warmth meet. Serving the community since 2009.</p></div>
+        <div class="footer-col"><h5>Navigate</h5><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Full Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+        <div class="footer-col"><h5>Visit</h5><ul><li><a href="reservation.html">Book a Table</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">Private Events</a></li><li><a href="contact.html">Gift Cards</a></li></ul></div>
+        <div class="footer-col"><h5>Hours</h5><ul><li><a>Mon–Fri: 11am–10pm</a></li><li><a>Saturday: 10am–11pm</a></li><li><a>Sunday: 10am–9pm</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links"><a href="#" class="social-link" aria-label="Facebook">f</a><a href="#" class="social-link" aria-label="Instagram">📷</a><a href="#" class="social-link" aria-label="TikTok">♪</a></div>
+    </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/auth-gate.js"></script>
+<script src="js/customer-auth.js"></script>
+<script src="js/reservation.js"></script>
+</body>
+</html>

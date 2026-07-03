@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="brand">Ember<span>&</span>Salt</div>
+    <nav>
+        <a href="dashboard.html"><span class="icon">📊</span><span class="label">Dashboard</span></a>
+        <a href="menu-management.html" class="active"><span class="icon">🍽️</span><span class="label">Menu Items</span></a>
+        <a href="reservations.html"><span class="icon">📅</span><span class="label">Reservations</span></a>
+        <a href="orders.html"><span class="icon">🧾</span><span class="label">Orders</span></a>
+        <a href="../index.html"><span class="icon">🌐</span><span class="label">View Site</span></a>
+    </nav>
+    <div class="logout"><a href="../php/logout.php"><span class="icon">↪</span><span class="label">Sign Out</span></a></div>
+</aside>
+
+<main class="admin-main">
+    <div class="admin-header">
+        <h1>Menu Management</h1>
+        <button class="btn-save" style="background:var(--ink)" onclick="resetForm()">+ Add New Item</button>
+    </div>
+
+    <div class="form-panel">
+        <h3 id="form-heading">Add New Item</h3>
+        <form id="menu-form" novalidate>
+            <input type="hidden" id="item-id">
+            <input type="hidden" id="form-action" value="create">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="item-name">Name *</label>
+                    <input type="text" id="item-name" placeholder="e.g. Truffle Fettuccine" required>
+                </div>
+                <div class="form-group">
+                    <label for="item-category">Category *</label>
+                    <select id="item-category" required>
+                        <option value="">Select…</option>
+                        <option value="pizza">Pizza</option>
+                        <option value="pasta">Pasta</option>
+                        <option value="steak">Steak</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="drinks">Drinks</option>
+                        <option value="starters">Starters</option>
+                        <option value="sides">Sides</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="item-price">Price (USD) *</label>
+                    <input type="number" id="item-price" step="0.01" min="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="item-image">Image URL</label>
+                    <input type="url" id="item-image" placeholder="https://…" oninput="previewImg(this.value)">
+                    <img id="img-preview" class="img-preview" alt="Preview">
+                </div>
+                <div class="form-group span2">
+                    <label for="item-desc">Description</label>
+                    <textarea id="item-desc" style="min-height:80px" placeholder="Describe the dish…"></textarea>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save" id="save-btn">Save Item</button>
+                <button type="button" class="btn-secondary-action" onclick="resetForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Current Menu Items</h3>
+            <span id="item-count" style="font-size:0.8rem;color:var(--warm-mid)"></span>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Available</th><th>Actions</th></tr></thead>
+                <tbody id="menu-tbody"><tr class="skeleton-row"><td colspan="6">Loading</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<script>
+    fetch('../php/auth_check.php').then(r=>r.json()).then(d=>{
+        if(!d.success) window.location.href='../login.html';
+    }).catch(()=>window.location.href='../login.html');
+
+    function toast(msg, type='success') {
+        const stack = document.getElementById('toast-stack');
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.textContent = msg;
+        stack.appendChild(t);
+        requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));
+        setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),350); },3000);
+    }
+
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    async function loadMenu() {
+        const r = await fetch('../php/admin_menu_crud.php?action=read');
+        const d = await r.json();
+        const tbody = document.getElementById('menu-tbody');
+        if (!d.success) { toast(d.message || 'Failed to load menu.','error'); return; }
+        document.getElementById('item-count').textContent = d.data.length + ' items';
+        if (!d.data.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-row">No items yet — add one above.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = d.data.map((item,i) => `
+            <tr id="row-${item.id}" class="row-in" style="animation-delay:${i*25}ms">
+                <td>${item.image_url ? `<img src="${esc(item.image_url)}" class="thumb" alt="" onerror="this.style.display='none'">` : '–'}</td>
+                <td><strong>${esc(item.name)}</strong><br><small style="color:var(--warm-mid)">${esc((item.description||'').substring(0,60))}${(item.description||'').length>60?'…':''}</small></td>
+                <td><span class="cat-badge">${esc(item.category)}</span></td>
+                <td>$${parseFloat(item.price).toFixed(2)}</td>
+                <td><span class="badge ${item.is_available=='1'?'badge-available':'badge-hidden'}">${item.is_available=='1'?'Available':'Hidden'}</span></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn-action edit"   onclick='editItem(${JSON.stringify(item)})'>Edit</button>
+                        <button class="btn-action toggle" onclick="toggleItem(${item.id})">${item.is_available=='1'?'Hide':'Show'}</button>
+                        <button class="btn-action delete"  onclick="deleteItem(${item.id},'${esc(item.name)}')">Delete</button>
+                    </div>
+                </td>
+            </tr>`).join('');
+    }
+
+    document.getElementById('menu-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const action = document.getElementById('form-action').value;
+        const fd = new FormData();
+        fd.append('action',      action);
+        fd.append('id',          document.getElementById('item-id').value);
+        fd.append('name',        document.getElementById('item-name').value.trim());
+        fd.append('category',    document.getElementById('item-category').value);
+        fd.append('price',       document.getElementById('item-price').value);
+        fd.append('description', document.getElementById('item-desc').value.trim());
+        fd.append('image_url',   document.getElementById('item-image').value.trim());
+
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true; btn.textContent = 'Saving…';
+
+        const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
+        const d = await r.json();
+        btn.disabled = false; btn.textContent = 'Save Item';
+
+        if (d.success) { toast(d.message || 'Saved!'); resetForm(); loadMenu(); }
+        else           { toast(d.message || 'Error saving item.', 'error'); }
+    });
+
+    function editItem(item) {
+        document.getElementById('form-heading').textContent = 'Edit Item';
+        document.getElementById('form-action').value  = 'update';
+        document.getElementById('item-id').value      = item.id;
+        document.getElementById('item-name').value    = item.name;
+        document.getElementById('item-category').value = item.category;
+        document.getElementById('item-price').value   = item.price;
+        document.getElementById('item-desc').value    = item.description || '';
+        document.getElementById('item-image').value   = item.image_url || '';
+        previewImg(item.image_url || '');
+        document.getElementById('menu-form').scrollIntoView({ behavior:'smooth' });
+    }
+
+    async function toggleItem(id) {
+        const fd = new FormData();
+        fd.append('action','toggle'); fd.append('id',id);
+        const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
+        const d = await r.json();
+        d.success ? (toast(d.message), loadMenu()) : toast(d.message,'error');
+    }
+
+    async function deleteItem(id, name) {
+        if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+        const fd = new FormData();
+        fd.append('action','delete'); fd.append('id',id);
+        const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
+        const d = await r.json();
+        d.success ? (toast(`"${name}" deleted.`), loadMenu()) : toast(d.message,'error');
+    }
+
+    function resetForm() {
+        document.getElementById('menu-form').reset();
+        document.getElementById('form-heading').textContent = 'Add New Item';
+        document.getElementById('form-action').value = 'create';
+        document.getElementById('item-id').value     = '';
+        document.getElementById('img-preview').classList.remove('show');
+    }
+
+    function previewImg(url) {
+        const el = document.getElementById('img-preview');
+        if (url) { el.src = url; el.classList.add('show'); }
+        else      { el.classList.remove('show'); }
+    }
+
+    loadMenu();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+/* =============================================================
+   VARIABLES.CSS
+   Design tokens · Reset · Base typography
+   ============================================================= */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+/* ---------------------------------------------------------
+   Color & shadow tokens
+--------------------------------------------------------- */
+:root {
+    --ink:      #1A1410;
+    --ember:    #C0392B;
+    --salt:     #F7F3EE;
+    --warm-mid: #7A6652;
+    --gold:     #C9A84C;
+    --white:    #FFFFFF;
+    --card-bg:  #FDFAF6;
+    --border:   #E8E0D5;
+
+    --shadow-card:  0 2px 12px rgba(26,20,16,0.08), 0 0 0 1px var(--border);
+    --shadow-hover: 0 12px 40px rgba(26,20,16,0.14);
+}
+
+/* ---------------------------------------------------------
+   Typography tokens
+--------------------------------------------------------- */
+:root {
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'DM Mono', monospace;
+}
+
+/* ---------------------------------------------------------
+   Spacing & shape tokens
+--------------------------------------------------------- */
+:root {
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+}
+
+/* ---------------------------------------------------------
+   Motion tokens
+--------------------------------------------------------- */
+:root {
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------------------------------
+   Dark mode token overrides
+--------------------------------------------------------- */
+body.dark {
+    --ink:        #F0EBE4;
+    --salt:       #151210;
+    --warm-mid:   #A08B76;
+    --card-bg:    #1E1A16;
+    --border:     #2E2820;
+    --white:      #1E1A16;
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.3), 0 0 0 1px var(--border);
+}
+
+/* ---------------------------------------------------------
+   Reset
+--------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+img  { display: block; max-width: 100%; }
+a    { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ---------------------------------------------------------
+   Base typography
+--------------------------------------------------------- */
+body {
+    background: var(--salt);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background var(--transition), color var(--transition);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    line-height: 1.2;
+}

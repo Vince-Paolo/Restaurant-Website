@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .page-hero { padding:7rem 1.5rem 2.5rem; max-width:900px; margin:0 auto; }
+        .page-hero h1 { font-family:var(--font-display); font-size:clamp(2rem,5vw,3rem); color:var(--ink); }
+        .page-hero p  { color:var(--warm-mid); margin-top:0.4rem; font-style:italic; font-family:var(--font-display); }
+        .account-grid { max-width:900px; margin:0 auto; padding:0 1.5rem 4rem; display:grid; gap:1.5rem; }
+        .account-card { background:var(--card-bg); border-radius:var(--radius-lg); box-shadow:var(--shadow-card); padding:2rem; }
+        .account-card h2 { font-family:var(--font-display); font-size:1.4rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; }
+        .account-card h2 .icon { font-size:1.1rem; }
+        .profile-row { display:flex; align-items:center; gap:1.25rem; }
+        .profile-avatar { width:64px; height:64px; border-radius:50%; background:var(--ember); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.6rem; color:#fff; flex-shrink:0; }
+        .profile-info { min-width: 0; flex: 1; }
+        .profile-info strong { display: block; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-info span { display: block; font-size: 0.875rem; color: var(--warm-mid); font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-signout { margin-top:1rem; padding:0.55rem 1.2rem; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.85rem; color:var(--warm-mid); cursor:pointer; transition:background var(--transition), color var(--transition); }
+        .btn-signout:hover { background:var(--ember); color:#fff; border-color:var(--ember); }
+
+        /* Empty state */
+        .empty-state { text-align:center; padding:2.5rem 1rem; color:var(--warm-mid); }
+        .empty-state .empty-icon { font-size:2.5rem; margin-bottom:0.75rem; }
+        .empty-state p { font-size:0.9rem; }
+        .empty-state a { color:var(--ember); font-weight:500; }
+
+        /* Table */
+        .data-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+        .data-table th { text-align:left; padding:0.5rem 0.75rem; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--warm-mid); border-bottom:2px solid var(--border); }
+        .data-table td { padding:0.75rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+        .data-table tr:last-child td { border-bottom:none; }
+        .data-table tr:hover td { background:var(--salt); }
+
+        /* Status badges */
+        .badge { display:inline-block; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.72rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-family:var(--font-mono); }
+        .badge-pending   { background:#FEF3C7; color:#92400E; }
+        .badge-confirmed { background:#D1FAE5; color:#065F46; }
+        .badge-cancelled { background:#FEE2E2; color:#991B1B; }
+        .badge-completed { background:#E0E7FF; color:#3730A3; }
+        .badge-preparing { background:#FED7AA; color:#92400E; }
+        .badge-delivered { background:#D1FAE5; color:#065F46; }
+
+        /* Tabs */
+        .account-tabs { display:flex; gap:0.5rem; border-bottom:2px solid var(--border); margin-bottom:1.5rem; }
+        .tab-btn { padding:0.6rem 1rem; font-size:0.875rem; font-weight:500; color:var(--warm-mid); border-bottom:2px solid transparent; margin-bottom:-2px; cursor:pointer; transition:color var(--transition), border-color var(--transition); }
+        .tab-btn.active { color:var(--ember); border-bottom-color:var(--ember); }
+        .tab-panel { display:none; }
+        .tab-panel.active { display:block; }
+
+        /* Loading skeleton */
+        .skeleton { background:linear-gradient(90deg, var(--border) 25%, var(--salt) 50%, var(--border) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:4px; height:14px; margin:0.5rem 0; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .skeleton-row { display:flex; gap:1rem; padding:0.75rem 0; border-bottom:1px solid var(--border); }
+        .skeleton-row .s1 { flex:2; } .skeleton-row .s2 { flex:1; } .skeleton-row .s3 { flex:1; }
+
+        @media(max-width:600px) {
+            .data-table th:nth-child(n+4), .data-table td:nth-child(n+4) { display:none; }
+            .profile-row { flex-direction:column; text-align:center; }
+        }
+        @media(min-width:768px) { .account-grid { grid-template-columns:280px 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- Navigation (same pattern as all pages) -->
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About Us</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About Us</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Reservations</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<div class="page-hero">
+    <h1 id="page-greeting">My Account</h1>
+    <p>Manage your reservations and order history</p>
+</div>
+
+<div class="account-grid" id="account-grid">
+    <!-- Profile card -->
+    <div class="account-card" id="profile-card">
+        <h2><span class="icon">👤</span> Profile</h2>
+        <div class="profile-row">
+            <div class="profile-avatar" id="profile-avatar">?</div>
+            <div class="profile-info">
+                <strong id="profile-name">Loading…</strong>
+                <span   id="profile-email"></span>
+            </div>
+        </div>
+        <button class="btn-signout" id="profile-signout-btn">Sign Out</button>
+    </div>
+
+    <!-- Activity card -->
+    <div class="account-card">
+        <div class="account-tabs" role="tablist">
+            <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="reservations">Reservations</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="orders">Orders</button>
+        </div>
+
+        <!-- Reservations tab -->
+        <div class="tab-panel active" id="tab-reservations">
+            <div id="reservations-loading">
+                <div class="skeleton-row"><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div></div>
+                <div class="skeleton-row"><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div></div>
+                <div class="skeleton-row"><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div></div>
+            </div>
+            <div id="reservations-content" style="display:none"></div>
+        </div>
+
+        <!-- Orders tab -->
+        <div class="tab-panel" id="tab-orders">
+            <div id="orders-loading">
+                <div class="skeleton-row"><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div></div>
+                <div class="skeleton-row"><div class="skeleton s1"></div><div class="skeleton s2"></div><div class="skeleton s3"></div></div>
+            </div>
+            <div id="orders-content" style="display:none"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/customer-auth.js"></script>
+<script>
+(async () => {
+    // Guard: redirect to login if not authenticated
+    let accountData;
+    try {
+        const res  = await fetch('php/customer_auth_check.php');
+        const data = await res.json();
+        if (!data.success) { window.location.href = 'account-login.html'; return; }
+    } catch { window.location.href = 'account-login.html'; return; }
+
+    // Load account data
+    try {
+        const res  = await fetch('php/customer_account.php');
+        accountData = await res.json();
+    } catch {
+        accountData = { success: false };
+    }
+
+    if (!accountData?.success) {
+        document.getElementById('profile-name').textContent  = 'Error loading account.';
+        return;
+    }
+
+    const { name, email, reservations, orders } = accountData.data;
+    const firstName = name.split(' ')[0];
+
+    // Populate profile
+    document.getElementById('page-greeting').textContent = `Welcome back, ${firstName}`;
+    document.getElementById('profile-name').textContent  = name;
+    document.getElementById('profile-email').textContent = email;
+    document.getElementById('profile-avatar').textContent = name.charAt(0).toUpperCase();
+
+    // Sign out
+    document.getElementById('profile-signout-btn')?.addEventListener('click', async () => {
+        await fetch('php/customer_logout.php');
+        window.location.href = 'index.html';
+    });
+
+    // Badge helper
+    function badge(status) {
+        const map = {
+            pending:'badge-pending', confirmed:'badge-confirmed', cancelled:'badge-cancelled',
+            completed:'badge-completed', preparing:'badge-preparing', delivered:'badge-delivered',
+        };
+        const cls = map[(status||'').toLowerCase()] || 'badge-pending';
+        return `<span class="badge ${cls}">${status || 'Pending'}</span>`;
+    }
+
+    // Format date
+    function fmtDate(d) {
+        if (!d) return '—';
+        return new Date(d).toLocaleDateString('en-PH', { year:'numeric', month:'short', day:'numeric' });
+    }
+
+    // Render reservations
+    document.getElementById('reservations-loading').style.display = 'none';
+    const rCont = document.getElementById('reservations-content');
+    rCont.style.display = 'block';
+
+    if (!reservations?.length) {
+        rCont.innerHTML = `<div class="empty-state">
+            <div class="empty-icon">🍽️</div>
+            <p>No reservations yet. <a href="reservation.html">Book a table</a> for your next visit.</p>
+        </div>`;
+    } else {
+        rCont.innerHTML = `<div style="overflow-x:auto"><table class="data-table">
+            <thead><tr>
+                <th>Date</th><th>Time</th><th>Guests</th><th>Status</th><th>Requests</th>
+            </tr></thead>
+            <tbody>
+            ${reservations.map(r => `<tr>
+                <td>${fmtDate(r.reservation_date)}</td>
+                <td style="font-family:var(--font-mono)">${r.reservation_time?.slice(0,5) || '—'}</td>
+                <td>${r.guests}</td>
+                <td>${badge(r.status)}</td>
+                <td style="color:var(--warm-mid);font-size:0.82rem">${r.special_requests || '—'}</td>
+            </tr>`).join('')}
+            </tbody></table></div>`;
+    }
+
+    // Render orders
+    document.getElementById('orders-loading').style.display = 'none';
+    const oCont = document.getElementById('orders-content');
+    oCont.style.display = 'block';
+
+    if (!orders?.length) {
+        oCont.innerHTML = `<div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <p>No orders yet. <a href="menu.html">Browse the menu</a> to place your first order.</p>
+        </div>`;
+    } else {
+        oCont.innerHTML = `<div style="overflow-x:auto"><table class="data-table">
+            <thead><tr>
+                <th>Date</th><th>Items</th><th>Total</th><th>Status</th>
+            </tr></thead>
+            <tbody>
+            ${orders.map(o => {
+                let items = o.items;
+                try { const parsed = JSON.parse(o.items); items = Array.isArray(parsed) ? parsed.map(i=>i.name||i).join(', ') : o.items; } catch{}
+                return `<tr>
+                    <td>${fmtDate(o.order_date)}</td>
+                    <td style="font-size:0.82rem;color:var(--warm-mid)">${items}</td>
+                    <td style="font-family:var(--font-mono)">₱${parseFloat(o.total_amount).toFixed(2)}</td>
+                    <td>${badge(o.status)}</td>
+                </tr>`;
+            }).join('')}
+            </tbody></table></div>`;
+    }
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn, .tab-panel').forEach(el => {
+                el.classList.remove('active');
+                if (el.getAttribute('role') === 'tab') el.setAttribute('aria-selected', false);
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', true);
+            document.getElementById(`tab-${btn.dataset.tab}`)?.classList.add('active');
+        });
+    });
+})();
+</script>
+</body>
+</html>

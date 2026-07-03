@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Book a Table</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main style="padding-top:68px">
+
+    <!-- Story -->
+    <section id="about-us">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Our Story</span>
+                <h2>Born from Fire & Passion</h2>
+                <p>Fifteen years of craft, community, and unforgettable meals.</p>
+                <div class="divider"></div>
+            </div>
+            <div style="max-width:680px;margin:0 auto;text-align:center" class="fade-in">
+                <p style="font-family:var(--font-display);font-size:1.25rem;font-weight:300;line-height:1.9;color:var(--ink)">
+                    Ember & Salt was founded in 2009 with a single belief: great dining is equal parts food and feeling.
+                    Our founder, Marco Villani, spent a decade in Michelin-starred kitchens across Europe before returning
+                    home to open a restaurant that felt personal — not performative.
+                </p>
+                <p style="margin-top:1.5rem;color:var(--warm-mid);line-height:1.8">
+                    Today, we source from over 20 local farms, partner with independent fishermen, and write our menu
+                    around what's exceptional that week — not what's convenient. Every plate that leaves our kitchen
+                    is one we're proud to serve.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chefs -->
+    <section id="our-chefs" style="background:var(--white)">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">The Kitchen</span>
+                <h2>Meet the Chefs</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="why-grid">
+                <div class="why-card fade-in" style="background:var(--salt);border-color:var(--border);text-align:left">
+                    <div style="font-size:3rem;margin-bottom:1rem">👨‍🍳</div>
+                    <h3 style="color:var(--ink)">Marco Villani</h3>
+                    <p style="color:var(--warm-mid);font-size:0.8rem;margin-bottom:0.5rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em">Executive Chef & Founder</p>
+                    <p style="color:var(--warm-mid)">Trained in Lyon and Milan. Obsessed with fire, simplicity, and the perfect ribeye.</p>
+                </div>
+                <div class="why-card fade-in" style="background:var(--salt);border-color:var(--border);text-align:left">
+                    <div style="font-size:3rem;margin-bottom:1rem">👩‍🍳</div>
+                    <h3 style="color:var(--ink)">Sofia Reyes</h3>
+                    <p style="color:var(--warm-mid);font-size:0.8rem;margin-bottom:0.5rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em">Head Pastry Chef</p>
+                    <p style="color:var(--warm-mid)">Former chocolate artist turned pastry lead. Responsible for that lava cake everyone talks about.</p>
+                </div>
+                <div class="why-card fade-in" style="background:var(--salt);border-color:var(--border);text-align:left">
+                    <div style="font-size:3rem;margin-bottom:1rem">🍷</div>
+                    <h3 style="color:var(--ink)">Luca Ferretti</h3>
+                    <p style="color:var(--warm-mid);font-size:0.8rem;margin-bottom:0.5rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em">Sommelier & Bar Director</p>
+                    <p style="color:var(--warm-mid)">Curates a 200-label wine list and crafts the cocktail menu each season from scratch.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Ember<span>&</span>Salt</div><p>Fine dining where craft and warmth meet. Serving the community since 2009.</p></div>
+        <div class="footer-col"><h5>Navigate</h5><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Full Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+        <div class="footer-col"><h5>Visit</h5><ul><li><a href="reservation.html">Book a Table</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">Private Events</a></li><li><a href="contact.html">Gift Cards</a></li></ul></div>
+        <div class="footer-col"><h5>Hours</h5><ul><li><a>Mon–Fri: 11am–10pm</a></li><li><a>Saturday: 10am–11pm</a></li><li><a>Sunday: 10am–9pm</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links"><a href="#" class="social-link" aria-label="Facebook">f</a><a href="#" class="social-link" aria-label="Instagram">📷</a><a href="#" class="social-link" aria-label="TikTok">♪</a></div>
+    </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/customer-auth.js"></script>
+</body>
+</html>

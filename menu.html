@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Book a Table</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main style="padding-top:68px">
+<section id="menu-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">Our Offerings</span>
+            <h2>Full Menu</h2>
+            <p>Explore our full selection — something for every palate and occasion.</p>
+            <div class="divider"></div>
+        </div>
+
+        <div class="filter-bar fade-in" role="group" aria-label="Filter by category">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pizza">Pizza</button>
+            <button class="filter-btn" data-filter="pasta">Pasta</button>
+            <button class="filter-btn" data-filter="steak">Steak</button>
+            <button class="filter-btn" data-filter="dessert">Dessert</button>
+            <button class="filter-btn" data-filter="drinks">Drinks</button>
+        </div>
+
+        <div class="menu-grid" id="menu-grid" role="list">
+            <!-- Menu items loaded from database via js/menu.js -->
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- Food Detail Modal -->
+<div class="modal-overlay" id="food-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+    <div id="modal-wrap">
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+        <div class="modal-box">
+            <img id="modal-img" class="modal-img" src="" alt="">
+            <div class="modal-body">
+                <h2 id="modal-title-text"></h2>
+                <p class="desc" id="modal-desc"></p>
+                <div class="modal-price" id="modal-price"></div>
+                <div class="modal-actions">
+                    <button class="btn-primary" id="modal-order-btn" style="flex:1">Add to Order</button>
+                    <button class="btn-order" onclick="document.getElementById('food-modal').classList.remove('active');document.body.style.overflow=''">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Ember<span>&</span>Salt</div><p>Fine dining where craft and warmth meet. Serving the community since 2009.</p></div>
+        <div class="footer-col"><h5>Navigate</h5><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Full Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+        <div class="footer-col"><h5>Visit</h5><ul><li><a href="reservation.html">Book a Table</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">Private Events</a></li><li><a href="contact.html">Gift Cards</a></li></ul></div>
+        <div class="footer-col"><h5>Hours</h5><ul><li><a>Mon–Fri: 11am–10pm</a></li><li><a>Saturday: 10am–11pm</a></li><li><a>Sunday: 10am–9pm</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links"><a href="#" class="social-link" aria-label="Facebook">f</a><a href="#" class="social-link" aria-label="Instagram">📷</a><a href="#" class="social-link" aria-label="TikTok">♪</a></div>
+    </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/auth-gate.js"></script>
+<script src="js/customer-auth.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>

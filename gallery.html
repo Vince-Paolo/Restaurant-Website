@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item {
+            position: relative; padding-top: 75%; overflow: hidden;
+            border-radius: var(--radius-md); cursor: pointer;
+            background: var(--border);
+        }
+        .gallery-item img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.06); }
+        .gallery-item::after {
+            content: '🔍'; position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; background: rgba(26,20,16,0); 
+            transition: background var(--transition);
+        }
+        .gallery-item:hover::after { background: rgba(26,20,16,0.3); }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed; inset: 0; background: rgba(26,20,16,0.95);
+            z-index: 9000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all var(--transition); padding: 1rem;
+        }
+        #lightbox.active { opacity: 1; visibility: visible; }
+        #lb-img { max-width: 90vw; max-height: 85vh; border-radius: var(--radius-md); object-fit: contain; }
+        #lb-close {
+            position: absolute; top: 1rem; right: 1rem;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(247,243,238,0.15); color: #F7F3EE;
+            font-size: 1.4rem; display: flex; align-items: center; justify-content: center;
+            transition: background var(--transition);
+        }
+        #lb-close:hover { background: var(--ember); }
+        #lb-prev, #lb-next {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(247,243,238,0.15); color: #F7F3EE;
+            font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+            transition: background var(--transition);
+        }
+        #lb-prev { left: 1rem; }
+        #lb-next { right: 1rem; }
+        #lb-prev:hover, #lb-next:hover { background: var(--ember); }
+    </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Book a Table</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main style="padding-top:68px">
+<section id="gallery">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">A Visual Taste</span>
+            <h2>Gallery</h2>
+            <p>A glimpse into our kitchen, our dining room, and the dishes we're proud of.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=75&auto=format" alt="Signature Pizza" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=400&q=75&auto=format" alt="Truffle Pasta" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=600&q=80&auto=format" alt="Premium Ribeye" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1579306194872-64d3b7bac4c2?w=400&q=75&auto=format" alt="Lava Cake" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=75&auto=format" alt="Carbonara" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=75&auto=format" alt="Cocktails" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=75&auto=format" alt="Quattro Formaggi" loading="lazy"></div>
+            <div class="gallery-item fade-in"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=75&auto=format" alt="Tiramisù" loading="lazy"></div>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button id="lb-close" aria-label="Close">&times;</button>
+    <button id="lb-prev" aria-label="Previous">‹</button>
+    <img id="lb-img" src="" alt="">
+    <button id="lb-next" aria-label="Next">›</button>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Ember<span>&</span>Salt</div><p>Fine dining where craft and warmth meet. Serving the community since 2009.</p></div>
+        <div class="footer-col"><h5>Navigate</h5><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Full Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+        <div class="footer-col"><h5>Visit</h5><ul><li><a href="reservation.html">Book a Table</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">Private Events</a></li><li><a href="contact.html">Gift Cards</a></li></ul></div>
+        <div class="footer-col"><h5>Hours</h5><ul><li><a>Mon–Fri: 11am–10pm</a></li><li><a>Saturday: 10am–11pm</a></li><li><a>Sunday: 10am–9pm</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links"><a href="#" class="social-link" aria-label="Facebook">f</a><a href="#" class="social-link" aria-label="Instagram">📷</a><a href="#" class="social-link" aria-label="TikTok">♪</a></div>
+    </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/customer-auth.js"></script>
+<script src="js/gallery.js"></script>
+</body>
+</html>

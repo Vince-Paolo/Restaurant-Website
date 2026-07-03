@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<!-- Scroll progress indicator -->
+<div id="scroll-progress"></div>
+<!-- Navigation Bar -->
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About Us</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Reservations</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-eyebrow">Fine Dining · Est. 2009</span>
+            <h1>Where fire meets <br><em>flavour</em></h1>
+            <!-- Typing animation targets this element -->
+            <p class="hero-sub hero-typing-text" id="hero-type"></p>
+            <div class="hero-buttons">
+                <a href="reservation.html" class="btn btn-primary">Book Table</a>
+                <a href="menu.html"        class="btn btn-outline secondary">Explore Menu</a>
+            </div>
+        </div>
+        <div class="hero-scroll" aria-hidden="true">
+            <div class="scroll-line"></div>
+            <span>scroll</span>
+        </div>
+    </section>
+
+    <!-- Featured Dishes / Today's Specials -->
+    <section id="featured-dishes">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Seasonal Selection</span>
+                <h2>Today's Specials</h2>
+                <p>Curated daily from the freshest market finds.</p>
+                <div class="divider"></div>
+            </div>
+            <div class="card-container specials-grid">
+
+                <!-- Pizza Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="assets/images/menu/pizza.jpg" alt="Pizza" loading="lazy"
+                             onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80&auto=format'">
+                        <span class="dish-badge">Chef's Pick</span>
+                    </div>
+                    <div class="dish-body">
+                        <h3>🍕 Signature Pizza</h3>
+                        <p class="description">Wood-fired perfection with fresh mozzarella.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$15.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Signature Pizza')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pasta Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="assets/images/menu/pasta.jpg" alt="Pasta" loading="lazy"
+                             onerror="this.src='https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80&auto=format'">
+                    </div>
+                    <div class="dish-body">
+                        <h3>🍝 Truffle Pasta</h3>
+                        <p class="description">Creamy truffle sauce over handmade fettuccine.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$18.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Truffle Pasta')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steak Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=600&q=80&auto=format" alt="Premium Ribeye" loading="lazy">
+                        <span class="dish-badge">Bestseller</span>
+                    </div>
+                    <div class="dish-body">
+                        <h3>🥩 Premium Ribeye</h3>
+                        <p class="description">Grilled to perfection, served with asparagus.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$32.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Premium Ribeye')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dessert Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="assets/images/menu/dessert.jpg" alt="Dessert" loading="lazy"
+                             onerror="this.src='https://images.unsplash.com/photo-1579306194872-64d3b7bac4c2?w=600&q=80&auto=format'">
+                    </div>
+                    <div class="dish-body">
+                        <h3>🍰 Lava Cake</h3>
+                        <p class="description">Warm chocolate center with vanilla bean ice cream.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$8.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Lava Cake')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Dessert Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80&auto=format" alt="Classic Tiramisù" loading="lazy">
+                        <span class="dish-badge">Fan Favourite</span>
+                    </div>
+                    <div class="dish-body">
+                        <h3>🍮 Classic Tiramisù</h3>
+                        <p class="description">Espresso-soaked Savoiardi, whipped mascarpone, dusted with Valrhona cocoa.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$9.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Classic Tiramisù')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drinks Card -->
+                <div class="card dish-card fade-in">
+                    <div class="dish-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&q=80&auto=format" alt="Ember Negroni" loading="lazy">
+                        <span class="dish-badge">New</span>
+                    </div>
+                    <div class="dish-body">
+                        <h3>🍸 Ember Negroni</h3>
+                        <p class="description">House-infused smoked gin, Campari, and smoked rosso vermouth over a large ice sphere.</p>
+                        <div class="dish-footer">
+                            <span class="dish-price price">$12.99</span>
+                            <button class="order-btn btn-order" onclick="orderSpecial('Ember Negroni')">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section id="why">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Our Promise</span>
+                <h2>Why Guests Return</h2>
+                <p>Every detail is deliberate — from source to plate to table.</p>
+                <div class="divider"></div>
+            </div>
+            <div class="why-grid">
+                <div class="why-card fade-in">
+                    <div class="why-icon">🌿</div>
+                    <h3>Farm-to-Table Sourcing</h3>
+                    <p>We work directly with local farms and fishermen, so ingredients arrive at their peak each morning.</p>
+                </div>
+                <div class="why-card fade-in">
+                    <div class="why-icon">👨‍🍳</div>
+                    <h3>Award-Winning Chefs</h3>
+                    <p>Our kitchen is led by a Michelin-trained team that brings craft and creativity to every dish.</p>
+                </div>
+                <div class="why-card fade-in">
+                    <div class="why-icon">🕯️</div>
+                    <h3>An Intimate Setting</h3>
+                    <p>Carefully lit, unhurried — designed to make any occasion feel like a special one.</p>
+                </div>
+                <div class="why-card fade-in">
+                    <div class="why-icon">⚡</div>
+                    <h3>Attentive Service</h3>
+                    <p>Our front-of-house team anticipates your needs without interrupting the moment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-label">Guest Voices</span>
+                <h2>What Our Guests Say</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="reviews-track" id="reviews-track" aria-live="polite">
+                <div class="review-card fade-in">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"The ribeye was the best I've ever had — and I've dined across three continents. The béarnaise alone was worth the trip."</p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">JD</div>
+                        <div>
+                            <div class="reviewer-name">Jane Doe</div>
+                            <div class="reviewer-meta">Verified Diner · 3 visits</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card fade-in">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"We celebrated our anniversary here and it was perfect from start to finish. The truffle pasta is what dreams are made of."</p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">MC</div>
+                        <div>
+                            <div class="reviewer-name">Marco C.</div>
+                            <div class="reviewer-meta">Verified Diner · 7 visits</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card fade-in">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Booking online was simple, the team remembered my allergies without me having to repeat myself. That's rare and it means everything."</p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">SR</div>
+                        <div>
+                            <div class="reviewer-name">Sofia R.</div>
+                            <div class="reviewer-meta">Verified Diner · 2 visits</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-nav" role="tablist" aria-label="Reviews navigation">
+                <div class="dot active" role="tab" aria-selected="true" data-idx="0"></div>
+                <div class="dot" role="tab" data-idx="1"></div>
+                <div class="dot" role="tab" data-idx="2"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="logo">Ember<span>&</span>Salt</div>
+            <p>Fine dining where craft and warmth meet. Serving the community since 2009.</p>
+        </div>
+        <div class="footer-col">
+            <h5>Navigate</h5>
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#specials">Today's Specials</a></li>
+                <li><a href="#menu-section">Full Menu</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h5>Visit</h5>
+            <ul>
+                <li><a href="#reservation">Book a Table</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+                <li><a href="#contact">Private Events</a></li>
+                <li><a href="#contact">Gift Cards</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h5>Hours</h5>
+            <ul>
+                <li><a>Mon–Fri: 11am–10pm</a></li>
+                <li><a>Saturday: 10am–11pm</a></li>
+                <li><a>Sunday: 10am–9pm</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links" aria-label="Social media links">
+            <a href="#" class="social-link" aria-label="Facebook">f</a>
+            <a href="#" class="social-link" aria-label="Instagram">📷</a>
+            <a href="#" class="social-link" aria-label="TikTok">♪</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
+<!-- Toast notifications -->
+<div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Scripts -->
+<script src="js/main.js"></script>
+<script src="js/auth-gate.js"></script>
+<script src="js/customer-auth.js"></script>
+<script>
+    // ── Homepage "Order Now" — require sign-in first ─────────
+    async function orderSpecial(name) {
+        const allowed = await requireAuth('order');
+        if (!allowed) return;
+        showToast(`${name} added to your order!`, 'success');
+    }
+
+    // ── Reviews carousel dots ────────────────────────────────
+    const dots  = document.querySelectorAll('.dot');
+    const track = document.getElementById('reviews-track');
+    dots.forEach(d => d.addEventListener('click', () => {
+        const idx = +d.dataset.idx;
+        dots.forEach((x, i) => {
+            x.classList.toggle('active', i === idx);
+            x.setAttribute('aria-selected', i === idx);
+        });
+        const cards = track.querySelectorAll('.review-card');
+        if (cards[idx]) cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }));
+
+    // Hide the carousel dots when every card already fits on screen —
+    // there's nothing to page through, so the nav is just clutter/misleading.
+    const reviewsNav = document.querySelector('.reviews-nav');
+    function syncReviewsNav() {
+        if (!track || !reviewsNav) return;
+        const hasOverflow = track.scrollWidth > track.clientWidth + 4;
+        reviewsNav.style.display = hasOverflow ? '' : 'none';
+    }
+    syncReviewsNav();
+    window.addEventListener('resize', syncReviewsNav);
+</script>
+
+</body>
+</html>

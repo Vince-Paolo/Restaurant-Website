@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--salt); }
+        .auth-wrap  { width:100%; max-width:440px; padding:1rem; }
+        .auth-card  { background:var(--card-bg); border-radius:var(--radius-lg); box-shadow:var(--shadow-hover); padding:2.75rem 2.5rem; }
+        .auth-logo  { text-align:center; font-family:var(--font-display); font-size:2rem; color:var(--ember); margin-bottom:0.25rem; }
+        .auth-logo span { color:var(--ink); }
+        .auth-subtitle { text-align:center; font-size:1rem; font-weight:400; color:var(--warm-mid); margin-bottom:2rem; font-family:var(--font-display); font-style:italic; }
+        .form-group  { margin-top:1rem; }
+        .form-group label { display:block; font-size:0.8rem; font-weight:500; text-transform:uppercase; letter-spacing:0.08em; color:var(--warm-mid); margin-bottom:0.4rem; }
+        .form-group input { width:100%; padding:0.7rem 1rem; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--salt); color:var(--ink); font-family:var(--font-body); font-size:0.95rem; transition:border-color var(--transition); }
+        .form-group input:focus { outline:none; border-color:var(--ember); }
+        .form-group input.error { border-color:var(--ember); }
+        .field-error { display:none; font-size:0.78rem; color:var(--ember); margin-top:0.3rem; }
+        .form-group input.error ~ .field-error { display:block; }
+        .btn-submit { width:100%; margin-top:1.5rem; padding:0.85rem; background:var(--ember); color:#fff; border-radius:var(--radius-sm); font-size:0.95rem; font-weight:600; letter-spacing:0.03em; cursor:pointer; border:none; transition:opacity var(--transition); }
+        .btn-submit:hover:not(:disabled) { opacity:0.88; }
+        .btn-submit:disabled { opacity:0.6; cursor:not-allowed; }
+        .auth-error { color:var(--ember); font-size:0.85rem; margin-top:0.85rem; text-align:center; display:none; }
+        .auth-error.show { display:block; }
+        .auth-footer { text-align:center; margin-top:1.5rem; font-size:0.85rem; color:var(--warm-mid); }
+        .auth-footer a { color:var(--ember); font-weight:500; }
+        .auth-divider { text-align:center; margin:1.25rem 0 0; font-size:0.78rem; color:var(--warm-mid); }
+        .password-wrap { position:relative; }
+        .password-wrap input { padding-right:2.75rem; }
+        .toggle-pw { position:absolute; right:0.8rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--warm-mid); font-size:1rem; padding:0; }
+        .toggle-pw:hover { color:var(--ember); }
+    </style>
+</head>
+<body>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-logo">Ember<span>&</span>Salt</div>
+        <p class="auth-subtitle">Welcome back</p>
+
+        <form id="login-form" novalidate>
+            <input type="hidden" name="csrf_token" id="csrf-token">
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required autofocus
+                       autocomplete="email">
+                <span class="field-error">Enter a valid email address.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrap">
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                           autocomplete="current-password">
+                    <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Toggle password visibility">👁</button>
+                </div>
+                <span class="field-error">Password is required.</span>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">Sign In</button>
+            <p class="auth-error" id="auth-error" role="alert"></p>
+        </form>
+
+        <p class="auth-divider">Don't have an account?</p>
+        <p class="auth-footer"><a href="register.html">Create an account →</a></p>
+        <p class="auth-footer" style="margin-top:0.5rem"><a href="index.html">← Back to website</a></p>
+    </div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/customer-auth.js"></script>
+<script>
+(async () => {
+    // Redirect if already logged in
+    try {
+        const res  = await fetch('php/customer_auth_check.php');
+        const data = await res.json();
+        if (data.success) { window.location.href = 'account.html'; return; }
+    } catch {}
+
+    // Fetch CSRF token
+    const token = await getCsrfToken('customer_login');
+    if (token) document.getElementById('csrf-token').value = token;
+
+    // Password toggle
+    document.getElementById('toggle-pw')?.addEventListener('click', () => {
+        const pw = document.getElementById('password');
+        pw.type = pw.type === 'password' ? 'text' : 'password';
+    });
+
+    // Form submit
+    const form      = document.getElementById('login-form');
+    const errorEl   = document.getElementById('auth-error');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        errorEl.classList.remove('show');
+
+        const emailInput = document.getElementById('email');
+        const pwInput    = document.getElementById('password');
+        let valid = true;
+
+        if (!emailInput.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+            emailInput.classList.add('error'); valid = false;
+        }
+        if (!pwInput.value) { pwInput.classList.add('error'); valid = false; }
+        if (!valid) return;
+
+        submitBtn.disabled    = true;
+        submitBtn.textContent = 'Signing in…';
+
+        try {
+            const res  = await fetch('php/customer_login.php', { method:'POST', body: new FormData(form) });
+            const data = await res.json();
+
+            if (data.success) {
+                showToast('Welcome back!', 'success');
+                const params = new URLSearchParams(window.location.search);
+                    const returnTo = params.get('return');
+                    setTimeout(() => window.location.href = returnTo || data.data.redirect, 500);
+            } else {
+                errorEl.textContent = data.message || 'Invalid credentials.';
+                errorEl.classList.add('show');
+                // Refresh CSRF token after failure
+                const newToken = await getCsrfToken('customer_login');
+                if (newToken) document.getElementById('csrf-token').value = newToken;
+                submitBtn.disabled    = false;
+                submitBtn.textContent = 'Sign In';
+            }
+        } catch {
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.classList.add('show');
+            submitBtn.disabled    = false;
+            submitBtn.textContent = 'Sign In';
+        }
+    });
+
+    // Clear error state on input
+    ['email','password'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', function(){ this.classList.remove('error'); });
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<header id="site-header">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Ember<span>&</span>Salt</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="reservation.html">Reserve</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn-theme" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <a href="reservation.html" class="btn-reserve">Book a Table</a>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="menu.html"        class="mobile-link">Menu</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="gallery.html"     class="mobile-link">Gallery</a>
+    <a href="reservation.html" class="mobile-link">Book a Table</a>
+    <a href="contact.html"     class="mobile-link">Contact</a>
+</div>
+
+<main style="padding-top:68px">
+<section id="contact">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">Get in Touch</span>
+            <h2>Contact Us</h2>
+            <p>Questions, private events, or just saying hello — we're here.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="contact-grid fade-in">
+            <div>
+                <div class="contact-info-block" style="margin-bottom:2rem">
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div><h4>Address</h4><p>123 Culinary Lane<br>Food City, FC 00100</p></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div><h4>Phone</h4><p><a href="tel:+15551234567" style="color:var(--ember)">(555) 123-4567</a></p></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div><h4>Email</h4><p><a href="mailto:embersaltofficial@gmail.com" style="color:var(--ember)">embersaltofficial@gmail.com</a></p></div>
+                    </div>
+                </div>
+                <!--Map-placeholder-->
+                <div class="map-container" style="border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d1935.7574819000515!2d121.3544818256776!3d13.98745177008507!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sph!4v1782743799885!5m2!1sen!2sph" 
+                        width="100%" 
+                        height="350" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+            <div>
+                <form class="contact-form" id="contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="c-name">Your Name</label>
+                        <input type="text" id="c-name" placeholder="Jane Smith" required>
+                        <span class="field-error">Please enter your name.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="c-email">Email Address</label>
+                        <input type="email" id="c-email" placeholder="jane@example.com" required>
+                        <span class="field-error">Valid email required.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="c-message">Message</label>
+                        <textarea id="c-message" style="min-height:325px" placeholder="Tell us about your enquiry…" required></textarea>
+                        <span class="field-error">Please enter a message.</span>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Ember<span>&</span>Salt</div><p>Fine dining where craft and warmth meet. Serving the community since 2009.</p></div>
+        <div class="footer-col"><h5>Navigate</h5><ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Full Menu</a></li><li><a href="about.html">About Us</a></li><li><a href="gallery.html">Gallery</a></li></ul></div>
+        <div class="footer-col"><h5>Visit</h5><ul><li><a href="reservation.html">Book a Table</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">Private Events</a></li><li><a href="contact.html">Gift Cards</a></li></ul></div>
+        <div class="footer-col"><h5>Hours</h5><ul><li><a>Mon–Fri: 11am–10pm</a></li><li><a>Saturday: 10am–11pm</a></li><li><a>Sunday: 10am–9pm</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 Ember & Salt. All rights reserved.</span>
+        <div class="social-links"><a href="#" class="social-link" aria-label="Facebook">f</a><a href="#" class="social-link" aria-label="Instagram">📷</a><a href="#" class="social-link" aria-label="TikTok">♪</a></div>
+    </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/auth-gate.js"></script>
+<script src="js/customer-auth.js"></script>
+<script src="js/contact.js"></script>
+</body>
+</html>

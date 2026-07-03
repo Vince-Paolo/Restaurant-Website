@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login — Ember & Salt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--salt); }
+        .login-wrap { width:100%; max-width:420px; padding:1rem; }
+        .login-card { background:var(--card-bg); border-radius:var(--radius-lg); box-shadow:var(--shadow-hover); padding:2.5rem; }
+        .login-logo { text-align:center; font-family:var(--font-display); font-size:2rem; color:var(--ember); margin-bottom:0.25rem; }
+        .login-logo span { color:var(--ink); }
+        .login-card h2 { text-align:center; font-size:1.1rem; font-weight:400; color:var(--warm-mid); margin-bottom:2rem; }
+        .login-error { color:var(--ember); font-size:0.85rem; margin-top:0.75rem; text-align:center; display:none; }
+        .login-error.show { display:block; }
+    </style>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="login-logo">Ember<span>&</span>Salt</div>
+        <h2>Staff Portal</h2>
+
+        <form id="login-form" novalidate>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="your.name" required autofocus>
+                <span class="field-error">Username is required.</span>
+            </div>
+            <div class="form-group" style="margin-top:0.75rem">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <span class="field-error">Password is required.</span>
+            </div>
+            <button type="submit" class="btn-submit" id="login-btn" style="margin-top:1.5rem">Sign In</button>
+            <p class="login-error" id="login-error"></p>
+        </form>
+
+        <p style="text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--warm-mid)">
+            <a href="index.html" style="color:var(--ember)">← Back to website</a>
+        </p>
+    </div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script>
+    // Redirect if already logged in
+    fetch('php/auth_check.php')
+        .then(r => r.json())
+        .then(d => { if (d.success) window.location.href = 'admin/dashboard.html'; })
+        .catch(() => {});
+
+    const form     = document.getElementById('login-form');
+    const errorEl  = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        errorEl.classList.remove('show');
+
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        let ok = true;
+        if (!username.value.trim()) { username.classList.add('error'); ok = false; }
+        if (!password.value)       { password.classList.add('error'); ok = false; }
+        if (!ok) return;
+
+        loginBtn.disabled    = true;
+        loginBtn.textContent = 'Signing in…';
+
+        try {
+            const fd = new FormData(form);
+            const res  = await fetch('php/login.php', { method:'POST', body: fd });
+            const data = await res.json();
+
+            if (data.success) {
+                showToast('Welcome back!', 'success');
+                setTimeout(() => window.location.href = data.data.redirect, 500);
+            } else {
+                errorEl.textContent = data.message || 'Invalid credentials.';
+                errorEl.classList.add('show');
+                loginBtn.disabled    = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        } catch {
+            errorEl.textContent = 'Network error. Please try again.';
+            errorEl.classList.add('show');
+            loginBtn.disabled    = false;
+            loginBtn.textContent = 'Sign In';
+        }
+    });
+
+    ['username','password'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            this.classList.remove('error');
+        });
+    });
+</script>
+</body>
+</html>

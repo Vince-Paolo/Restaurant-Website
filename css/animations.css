@@ -1,0 +1,564 @@
+/* =============================================================
+   ANIMATIONS.CSS  —  Ember & Salt
+   Every motion decision is intentional. The signature:
+   a slow ember-glow pulse on the hero that breathes like a
+   living fire. Everything else defers to it.
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   Motion tokens (extend variables.css)
+--------------------------------------------------------- */
+:root {
+    --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back:   cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-snap:       cubic-bezier(0.23, 1, 0.32, 1);
+    --dur-fast:   160ms;
+    --dur-base:   280ms;
+    --dur-slow:   480ms;
+    --dur-crawl:  700ms;
+}
+
+/* ---------------------------------------------------------
+   SIGNATURE: Hero ember glow — breathes like a live fire
+--------------------------------------------------------- */
+@keyframes emberBreathe {
+    0%, 100% {
+        opacity: 0.32;
+        transform: scale(1) translateY(0);
+        filter: blur(0px);
+    }
+    45% {
+        opacity: 0.52;
+        transform: scale(1.06) translateY(-12px);
+        filter: blur(2px);
+    }
+    70% {
+        opacity: 0.44;
+        transform: scale(1.03) translateY(-6px);
+        filter: blur(1px);
+    }
+}
+
+#hero::before {
+    animation: emberBreathe 6s ease-in-out infinite;
+}
+
+/* Slow ambient parallax drift on hero background */
+@keyframes heroDrift {
+    0%, 100% { background-position: 50% 50%; }
+    50%       { background-position: 52% 48%; }
+}
+
+/* ---------------------------------------------------------
+   Hero content entrance — staggered cascade
+--------------------------------------------------------- */
+@keyframes heroSlideUp {
+    from { opacity: 0; transform: translateY(32px); filter: blur(3px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+@keyframes heroFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.hero-eyebrow {
+    animation: heroSlideUp var(--dur-crawl) var(--ease-out-expo) 0.1s both;
+}
+.hero-content h1 {
+    animation: heroSlideUp var(--dur-crawl) var(--ease-out-expo) 0.25s both;
+}
+.hero-sub {
+    animation: heroSlideUp var(--dur-crawl) var(--ease-out-expo) 0.4s both;
+}
+.hero-buttons {
+    animation: heroSlideUp var(--dur-crawl) var(--ease-out-expo) 0.55s both;
+}
+.hero-scroll {
+    animation: heroFadeIn 1s var(--ease-out-expo) 1.1s both;
+}
+
+/* Scroll indicator pulse — more organic than before */
+@keyframes scrollPulse {
+    0%   { opacity: 0.2; transform: translateY(0); }
+    50%  { opacity: 0.8; transform: translateY(6px); }
+    100% { opacity: 0.2; transform: translateY(0); }
+}
+.scroll-line {
+    animation: scrollPulse 2.4s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------
+   Page entrance — nav slides down
+--------------------------------------------------------- */
+@keyframes navSlideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+header {
+    animation: navSlideDown var(--dur-crawl) var(--ease-out-expo) both;
+}
+
+/* ---------------------------------------------------------
+   Scroll-triggered fade-in — staggered siblings
+--------------------------------------------------------- */
+.fade-in {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity var(--dur-crawl) var(--ease-out-expo),
+        transform var(--dur-crawl) var(--ease-out-expo);
+}
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger siblings inside grids */
+.specials-grid    .fade-in:nth-child(1),
+.why-grid         .fade-in:nth-child(1),
+.gallery-grid > *:nth-child(1) { transition-delay: 0ms;   }
+
+.specials-grid    .fade-in:nth-child(2),
+.why-grid         .fade-in:nth-child(2),
+.gallery-grid > *:nth-child(2) { transition-delay: 80ms;  }
+
+.specials-grid    .fade-in:nth-child(3),
+.why-grid         .fade-in:nth-child(3),
+.gallery-grid > *:nth-child(3) { transition-delay: 160ms; }
+
+.specials-grid    .fade-in:nth-child(4),
+.why-grid         .fade-in:nth-child(4),
+.gallery-grid > *:nth-child(4) { transition-delay: 240ms; }
+
+.specials-grid    .fade-in:nth-child(5),
+.gallery-grid > *:nth-child(5) { transition-delay: 320ms; }
+
+.specials-grid    .fade-in:nth-child(6),
+.gallery-grid > *:nth-child(6) { transition-delay: 400ms; }
+
+/* ---------------------------------------------------------
+   Card hover — dish + menu cards
+   Lift with shadow swell, image zoom stays restrained
+--------------------------------------------------------- */
+.dish-card {
+    transition:
+        transform var(--dur-base) var(--ease-out-back),
+        box-shadow var(--dur-base) var(--ease-out-expo);
+    will-change: transform;
+}
+.dish-card:hover {
+    transform: translateY(-7px) scale(1.012);
+    box-shadow: 0 20px 48px rgba(26,20,16,0.16), 0 0 0 1px var(--border);
+}
+.dish-img-wrap { overflow: hidden; }
+.dish-img-wrap img {
+    transition: transform 0.65s var(--ease-snap);
+    will-change: transform;
+}
+.dish-card:hover .dish-img-wrap img {
+    transform: scale(1.08);
+}
+
+/* Dish badge pop on card hover */
+.dish-badge {
+    transition: transform var(--dur-base) var(--ease-out-back),
+                background var(--dur-base);
+}
+.dish-card:hover .dish-badge {
+    transform: scale(1.08);
+}
+
+.menu-card {
+    transition:
+        transform var(--dur-base) var(--ease-out-back),
+        box-shadow var(--dur-base) var(--ease-out-expo);
+    will-change: transform;
+}
+.menu-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(26,20,16,0.13);
+}
+.menu-card-img { overflow: hidden; }
+.menu-card-img img {
+    transition: transform 0.65s var(--ease-snap);
+}
+.menu-card:hover .menu-card-img img {
+    transform: scale(1.07);
+}
+
+/* Filter button — fills with ember color from center */
+.filter-btn {
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        color var(--dur-base) var(--ease-in-out),
+        border-color var(--dur-base) var(--ease-in-out),
+        transform var(--dur-fast) var(--ease-out-back);
+}
+.filter-btn:hover  { transform: translateY(-1px); }
+.filter-btn:active { transform: translateY(0) scale(0.97); }
+
+/* ---------------------------------------------------------
+   Menu card hidden / filter transition
+   Fade out instead of instant display:none
+--------------------------------------------------------- */
+.menu-card {
+    transition:
+        transform var(--dur-base) var(--ease-out-back),
+        box-shadow var(--dur-base) var(--ease-out-expo),
+        opacity var(--dur-base) var(--ease-in-out);
+}
+.menu-card.hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;  /* pull out of flow instantly without layout shift */
+}
+
+/* ---------------------------------------------------------
+   Favourite button — heartbeat pop
+--------------------------------------------------------- */
+@keyframes heartbeat {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.35); }
+    60%  { transform: scale(0.92); }
+    80%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+.fav-btn {
+    transition: background var(--dur-base), color var(--dur-base);
+}
+.fav-btn:hover { transform: scale(1.12); }
+.fav-btn.active {
+    animation: heartbeat 0.45s var(--ease-out-back);
+}
+
+/* ---------------------------------------------------------
+   Why cards — ember border glow on hover
+--------------------------------------------------------- */
+.why-card {
+    transition:
+        background var(--dur-slow) var(--ease-in-out),
+        border-color var(--dur-slow) var(--ease-in-out),
+        transform var(--dur-base) var(--ease-out-back),
+        box-shadow var(--dur-slow) var(--ease-in-out);
+}
+.why-card:hover {
+    transform: translateY(-4px);
+    background: rgba(247, 243, 238, 0.12);
+    border-color: rgba(201, 168, 76, 0.5);
+    box-shadow: 0 0 24px rgba(201, 168, 76, 0.12), inset 0 0 0 1px rgba(201,168,76,0.2);
+}
+.why-icon {
+    transition: transform var(--dur-base) var(--ease-out-back);
+    display: inline-block;
+}
+.why-card:hover .why-icon {
+    transform: scale(1.18) rotate(-4deg);
+}
+
+/* ---------------------------------------------------------
+   Nav — underline slide from left on hover
+--------------------------------------------------------- */
+nav a {
+    position: relative;
+    transition: color var(--dur-base) var(--ease-in-out),
+                background var(--dur-base) var(--ease-in-out);
+}
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 50%; right: 50%;
+    height: 1.5px;
+    background: var(--ember);
+    transition: left var(--dur-base) var(--ease-out-expo),
+                right var(--dur-base) var(--ease-out-expo);
+    border-radius: 1px;
+}
+nav a:hover::after,
+nav a.active::after { left: 10%; right: 10%; }
+
+/* ---------------------------------------------------------
+   Buttons — micro lift + glow
+--------------------------------------------------------- */
+.btn-primary, .btn-reserve, .btn-submit, .btn-order {
+    position: relative;
+    overflow: hidden;
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        transform var(--dur-fast) var(--ease-out-back),
+        box-shadow var(--dur-base) var(--ease-in-out);
+}
+
+/* Ripple on click */
+.btn-primary::after, .btn-reserve::after, .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.18);
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+    border-radius: inherit;
+}
+.btn-primary:active::after,
+.btn-reserve:active::after,
+.btn-submit:active::after { opacity: 1; }
+
+.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,57,43,0.38); }
+.btn-primary:active { transform: translateY(0) scale(0.98); box-shadow: none; }
+
+.btn-reserve:hover  { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(192,57,43,0.3); }
+.btn-reserve:active { transform: scale(0.97); }
+
+.btn-submit:hover   { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,57,43,0.3); }
+.btn-submit:active  { transform: scale(0.98); }
+
+.btn-order {
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        color var(--dur-base),
+        transform var(--dur-fast) var(--ease-out-back);
+}
+.btn-order:hover  { background: var(--ember); transform: translateY(-1px); }
+.btn-order:active { transform: scale(0.96); }
+
+.btn-outline {
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        border-color var(--dur-base),
+        transform var(--dur-fast) var(--ease-out-back);
+}
+.btn-outline:hover  { transform: translateY(-2px); }
+.btn-outline:active { transform: scale(0.98); }
+
+/* ---------------------------------------------------------
+   Hamburger — morphs into × on open
+--------------------------------------------------------- */
+.hamburger span {
+    transition:
+        transform var(--dur-base) var(--ease-out-expo),
+        opacity   var(--dur-fast) var(--ease-in-out);
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ---------------------------------------------------------
+   Mobile nav — slides in from right with blur
+--------------------------------------------------------- */
+.mobile-nav {
+    transform: translateX(100%);
+    opacity: 0;
+    transition:
+        transform var(--dur-slow) var(--ease-out-expo),
+        opacity   var(--dur-base) var(--ease-in-out);
+    backdrop-filter: blur(0px);
+}
+.mobile-nav.open {
+    transform: translateX(0);
+    opacity: 1;
+    backdrop-filter: blur(12px);
+}
+.mobile-nav a {
+    transition:
+        background var(--dur-base),
+        transform var(--dur-fast) var(--ease-out-back),
+        opacity var(--dur-base);
+    transform: translateX(0);
+}
+.mobile-nav.open a:nth-child(1) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.05s both; }
+.mobile-nav.open a:nth-child(2) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.10s both; }
+.mobile-nav.open a:nth-child(3) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.15s both; }
+.mobile-nav.open a:nth-child(4) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.20s both; }
+.mobile-nav.open a:nth-child(5) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.25s both; }
+.mobile-nav.open a:nth-child(6) { animation: mobileNavItem 0.35s var(--ease-out-expo) 0.30s both; }
+
+@keyframes mobileNavItem {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------------------------------------------------------
+   Modal — scale up from slightly below center
+--------------------------------------------------------- */
+.modal-overlay {
+    transition:
+        opacity var(--dur-base) var(--ease-in-out),
+        visibility 0s var(--dur-base);
+}
+.modal-overlay.active {
+    transition:
+        opacity var(--dur-base) var(--ease-in-out),
+        visibility 0s 0s;
+}
+#modal-wrap {
+    transform: scale(0.92) translateY(20px);
+    opacity: 0;
+    transition:
+        transform var(--dur-slow) var(--ease-out-expo),
+        opacity   var(--dur-base) var(--ease-in-out);
+}
+.modal-overlay.active #modal-wrap {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* ---------------------------------------------------------
+   Toast — slides in from right, pauses, fades out up
+--------------------------------------------------------- */
+@keyframes toastIn {
+    from { transform: translateX(110%) scale(0.9); opacity: 0; }
+    to   { transform: translateX(0) scale(1);      opacity: 1; }
+}
+@keyframes toastOut {
+    from { transform: translateX(0) scale(1);   opacity: 1; }
+    to   { transform: translateX(110%) scale(0.9); opacity: 0; }
+}
+.toast {
+    animation: toastIn var(--dur-base) var(--ease-out-expo) both;
+}
+.toast.hide {
+    animation: toastOut var(--dur-base) var(--ease-in-out) both;
+}
+
+/* ---------------------------------------------------------
+   Review carousel — crossfade between active cards
+--------------------------------------------------------- */
+.review-card {
+    transition: opacity var(--dur-slow) var(--ease-in-out),
+                transform var(--dur-slow) var(--ease-out-expo);
+}
+
+.dot {
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        width var(--dur-base) var(--ease-out-expo),
+        transform var(--dur-fast) var(--ease-out-back);
+}
+.dot:hover { transform: scale(1.3); }
+.dot.active { background: var(--ember); width: 24px; border-radius: 4px; }
+
+/* ---------------------------------------------------------
+   Form fields — focus lift with ember ring
+--------------------------------------------------------- */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    transition:
+        border-color var(--dur-base) var(--ease-in-out),
+        box-shadow   var(--dur-base) var(--ease-in-out),
+        transform    var(--dur-fast) var(--ease-out-back);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.15), 0 2px 8px rgba(26,20,16,0.06);
+}
+
+/* ---------------------------------------------------------
+   Social links in footer
+--------------------------------------------------------- */
+.social-link {
+    transition:
+        background var(--dur-base) var(--ease-in-out),
+        color       var(--dur-base),
+        border-color var(--dur-base),
+        transform   var(--dur-fast) var(--ease-out-back);
+}
+.social-link:hover { transform: translateY(-3px) scale(1.08); }
+.social-link:active { transform: scale(0.94); }
+
+/* Footer links */
+.footer-col ul li a {
+    transition: color var(--dur-base), transform var(--dur-fast) var(--ease-out-back);
+    display: inline-block;
+}
+.footer-col ul li a:hover { transform: translateX(3px); color: var(--gold); }
+
+/* ---------------------------------------------------------
+   Back to top — bounce in from below
+--------------------------------------------------------- */
+@keyframes bttBounce {
+    from { transform: translateY(80px) scale(0.8); opacity: 0; }
+    to   { transform: translateY(0) scale(1);       opacity: 1; }
+}
+#back-to-top {
+    opacity: 0;
+    transform: translateY(80px);
+    transition:
+        transform var(--dur-base) var(--ease-out-expo),
+        opacity   var(--dur-base) var(--ease-in-out),
+        background var(--dur-base);
+}
+#back-to-top.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+#back-to-top:hover { transform: translateY(-4px) scale(1.06); }
+#back-to-top:active { transform: scale(0.94); }
+
+/* ---------------------------------------------------------
+   Section divider — gold line draws in on scroll
+--------------------------------------------------------- */
+.divider {
+    width: 0;
+    transition: width 0.8s var(--ease-out-expo);
+    height: 2px;
+    background: var(--gold);
+    margin: 1.25rem auto 0;
+    border-radius: 1px;
+}
+.fade-in.visible .divider,
+.section-header.visible .divider {
+    width: 48px;
+}
+/* Fallback for divider not inside a fade-in */
+.divider { width: 48px; }
+.section-header .fade-in .divider { width: 0; }
+
+/* ---------------------------------------------------------
+   Gallery image hover
+--------------------------------------------------------- */
+.gallery-item {
+    transition:
+        transform var(--dur-base) var(--ease-out-back),
+        box-shadow var(--dur-base) var(--ease-out-expo);
+    overflow: hidden;
+}
+.gallery-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 16px 40px rgba(26,20,16,0.2);
+    z-index: 2;
+}
+.gallery-item img {
+    transition: transform 0.6s var(--ease-snap);
+}
+.gallery-item:hover img {
+    transform: scale(1.06);
+}
+
+/* ---------------------------------------------------------
+   Page transition — body fades in on load
+--------------------------------------------------------- */
+@keyframes pageIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+body {
+    animation: pageIn 0.4s var(--ease-out-expo) both;
+}
+
+/* ---------------------------------------------------------
+   Reduced motion — disable non-essential animation
+   Transitions are shortened to near-instant, not removed,
+   so layout/state changes still feel responsive.
+--------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+    .fade-in { opacity: 1; transform: none; }
+    #hero::before { animation: none; }
+}

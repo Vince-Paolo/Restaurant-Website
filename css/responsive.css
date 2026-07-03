@@ -1,0 +1,87 @@
+/* =============================================================
+   RESPONSIVE.CSS
+   Breakpoint overrides — mobile-first additions
+   Depends on: variables.css, style.css
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   Why cards: 2x2 slightly earlier than the general tablet
+   breakpoint, since auto-fit was still fitting 3 columns here
+--------------------------------------------------------- */
+@media (max-width: 1000px) {
+    .why-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ---------------------------------------------------------
+   Tablet  ≤ 900px
+--------------------------------------------------------- */
+@media (max-width: 900px) {
+    /* Hide desktop nav; show hamburger earlier to prevent squeezing */
+    nav            { display: none; }
+    .hamburger     { display: flex; }
+    .btn-reserve   { display: none; }
+
+    /* Reservation: stack info above form */
+    .reservation-wrap {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    /* Contact: stack map above form */
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Footer: 2-column layout */
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ---------------------------------------------------------
+   Testimonials: switch straight to single full-width card
+   at the tablet breakpoint (a 45% "2-up peek" layout was
+   tried here previously but clipped cards awkwardly)
+--------------------------------------------------------- */
+@media (max-width: 900px) {
+    .review-card { flex: 0 0 100%; }
+}
+
+/* ---------------------------------------------------------
+   Mobile  ≤ 640px
+--------------------------------------------------------- */
+@media (max-width: 640px) {
+    /* Hero: smaller headline, stacked buttons */
+    .hero-content h1 { font-size: 2.8rem; }
+    .hero-buttons    { flex-direction: column; align-items: center; }
+    .btn-primary,
+    .btn-outline     { width: 100%; text-align: center; }
+
+    /* Forms: single-column */
+    .form-row { grid-template-columns: 1fr; }
+
+    /* Footer: single-column */
+    .footer-grid   { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+
+    /* Reviews: full-width cards */
+    .review-card { flex: 0 0 100%; }
+
+    /* Tighten section padding on small screens */
+    section { padding: 3.5rem 1rem; }
+}
+
+/* Layout overrides for larger screens */
+@media (min-width: 1024px) {
+    .specials-grid {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+@media (min-width: 1280px) {
+    .specials-grid {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
