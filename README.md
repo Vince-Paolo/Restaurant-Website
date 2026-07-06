@@ -47,7 +47,7 @@ Get a local instance of the restaurant website up and running in seconds:
 ## 🔗 Links
 
 *   **Live Demo:** [Insert Live Demo URL Here]
-*   **GitHub Repository:** [Insert GitHub Link Here]
+*   **GitHub Repository:** [(https://github.com/Vince-Paolo/Restaurant-Website)]
 
 ---
 *Crafted with a passion for good food and seamless digital experiences.*
