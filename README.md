@@ -21,7 +21,7 @@ Get a local instance of the restaurant website up and running in seconds:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [Insert Your GitHub Repo Link Here]
+    git clone [https://github.com/Vince-Paolo/Restaurant-Website]
     ```
 2.  **Navigate to the project directory:**
     ```bash
@@ -41,8 +41,6 @@ Get a local instance of the restaurant website up and running in seconds:
 | Home Page | Interactive Menu | Reservation Form |
 | :---: | :---: | :---: |
 | ![Home Page](assets/images/preview.png) | ![Menu](assets/images/menu.png) | ![Reservations](assets/images/reservation.png) |
-
-*(Note: Remember to replace these placeholder paths with the actual paths to your project images).*
 
 ## 🔗 Links
 
