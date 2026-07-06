@@ -1,6 +1,6 @@
 <?php
 // php/customer_login.php  —  Customer authentication (never grants admin access)
-session_start();
+require __DIR__ . '/session_init.php';
 require 'config.php';
 header('Content-Type: application/json');
 

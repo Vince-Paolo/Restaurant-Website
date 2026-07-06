@@ -4,6 +4,16 @@ require 'config.php';
 require_admin();
 header('Content-Type: application/json');
 
+// ---- CSRF (state-changing requests only) --------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $csrf = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf($csrf, 'admin_action')) {
+        http_response_code(403);
+        json_response(false, null, 'Invalid or expired form token. Please refresh and try again.');
+        exit();
+    }
+}
+
 $action = clean($_POST['action'] ?? $_GET['action'] ?? '');
 
 switch ($action) {
@@ -15,7 +25,8 @@ switch ($action) {
         $price       = (float)($_POST['price']     ?? 0);
         $category    = clean($_POST['category']    ?? '');
         $image_url   = clean($_POST['image_url']   ?? '');
-        $available   = isset($_POST['is_available']) ? 1 : 1; // default on
+        // Checkbox default-on: absent field means "available" (matches HTML checkbox semantics)
+        $available   = isset($_POST['is_available']) ? (int)!!$_POST['is_available'] : 1;
 
         if (!$name || !$category || $price <= 0) {
             json_response(false, null, 'Name, category and a valid price are required.');
@@ -27,7 +38,7 @@ switch ($action) {
              VALUES (?, ?, ?, ?, ?, ?)'
         );
         try {
-            $ok = $stmt->execute([$name, $description, $price, $category, $image_url, 1]);
+            $ok = $stmt->execute([$name, $description, $price, $category, $image_url, $available]);
             json_response(true, ['id' => $pdo->lastInsertId()], 'Item created.');
         } catch (\PDOException $e) {
             if ($e->getCode() == 23000) {

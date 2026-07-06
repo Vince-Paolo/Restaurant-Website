@@ -30,7 +30,7 @@ try {
 // Session guard — admin pages
 // ---------------------------------------------------------
 function require_admin(): void {
-    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (session_status() === PHP_SESSION_NONE) require __DIR__ . '/session_init.php';
     if (empty($_SESSION['admin_logged_in'])) {
         header('Content-Type: application/json');
         http_response_code(401);
@@ -43,7 +43,7 @@ function require_admin(): void {
 // Session guard — customer pages (never grants admin access)
 // ---------------------------------------------------------
 function require_customer(): void {
-    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (session_status() === PHP_SESSION_NONE) require __DIR__ . '/session_init.php';
     if (empty($_SESSION['customer_logged_in'])) {
         header('Content-Type: application/json');
         http_response_code(401);
@@ -75,7 +75,7 @@ function clean(string $val): string {
 // ---------------------------------------------------------
 function generate_csrf(string $context = 'form'): string {
     global $pdo;
-    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (session_status() === PHP_SESSION_NONE) require __DIR__ . '/session_init.php';
     $token = bin2hex(random_bytes(32));
     // Clean up old tokens (>1 hour) for this context
     $pdo->prepare('DELETE FROM csrf_tokens WHERE context = ? AND created_at < NOW() - INTERVAL 1 HOUR')

@@ -1,6 +1,6 @@
 <?php
 // php/customer_auth_check.php  —  Called by frontend to check customer session
-session_start();
+require __DIR__ . '/session_init.php';
 require 'config.php';
 header('Content-Type: application/json');
 

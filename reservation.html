@@ -70,6 +70,7 @@
                     <span>✓</span> Your table is booked! We'll send a confirmation shortly.
                 </div>
                 <form class="res-form" id="reservation-form" novalidate>
+                    <input type="hidden" name="csrf_token" id="res-csrf-token">
                     <div class="form-group">
                         <label for="res-name">Full Name</label>
                         <input type="text" id="res-name" name="name" placeholder="Jane Smith" required>

@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; // stop setting up the rest of the form logic
     }
 
+    // ── CSRF token — must be fetched before the form can submit ─
+    await injectCsrf(resForm, 'reservation');
+
     // ── Minimum date = today ─────────────────────────────────
     const now      = new Date();
     const yyyy     = now.getFullYear();
@@ -109,6 +112,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast(data.message || 'Something went wrong. Please try again.', 'error');
                 btn.disabled    = false;
                 btn.textContent = 'Confirm Reservation';
+                // The token is one-time-use (or may have expired) — get a fresh one for the retry
+                await injectCsrf(resForm, 'reservation');
             }
         } catch {
             showToast('Network error. Please check your connection.', 'error');

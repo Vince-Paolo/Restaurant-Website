@@ -89,9 +89,11 @@
 
 <div class="toast-stack" id="toast-stack"></div>
 
+<script src="../js/customer-auth.js"></script>
 <script>
     fetch('../php/auth_check.php').then(r=>r.json()).then(d=>{
         if(!d.success) window.location.href='../login.html';
+        else if(d.data.must_change_password) window.location.href='change-password.html';
     }).catch(()=>window.location.href='../login.html');
 
     function toast(msg, type='success') {
@@ -148,6 +150,9 @@
         const btn = document.getElementById('save-btn');
         btn.disabled = true; btn.textContent = 'Saving…';
 
+        const token = await getCsrfToken('admin_action');
+        if (token) fd.append('csrf_token', token);
+
         const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
         const d = await r.json();
         btn.disabled = false; btn.textContent = 'Save Item';
@@ -172,6 +177,8 @@
     async function toggleItem(id) {
         const fd = new FormData();
         fd.append('action','toggle'); fd.append('id',id);
+        const token = await getCsrfToken('admin_action');
+        if (token) fd.append('csrf_token', token);
         const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
         const d = await r.json();
         d.success ? (toast(d.message), loadMenu()) : toast(d.message,'error');
@@ -181,6 +188,8 @@
         if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
         const fd = new FormData();
         fd.append('action','delete'); fd.append('id',id);
+        const token = await getCsrfToken('admin_action');
+        if (token) fd.append('csrf_token', token);
         const r = await fetch('../php/admin_menu_crud.php', { method:'POST', body:fd });
         const d = await r.json();
         d.success ? (toast(`"${name}" deleted.`), loadMenu()) : toast(d.message,'error');

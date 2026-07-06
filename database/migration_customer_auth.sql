@@ -58,7 +58,17 @@ ALTER TABLE orders
         FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL;
 
 -- ------------------------------------------------------------
--- 6. Fix the placeholder admin hash — UPDATE with a real hash!
+-- 6. Force a password change for any admin still on the seeded
+--    default credentials (existing installs that predate this
+--    column all default to 0, so backfill the known default user).
+-- ------------------------------------------------------------
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS must_change_password TINYINT(1) NOT NULL DEFAULT 0;
+
+UPDATE users SET must_change_password = 1 WHERE username = 'admin';
+
+-- ------------------------------------------------------------
+-- 7. Fix the placeholder admin hash — UPDATE with a real hash!
 --    Generate: php -r "echo password_hash('Admin@1234', PASSWORD_DEFAULT);"
 --    Then replace the hash below with your output.
 -- ------------------------------------------------------------

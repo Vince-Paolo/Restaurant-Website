@@ -28,6 +28,7 @@
         <h2>Staff Portal</h2>
 
         <form id="login-form" novalidate>
+            <input type="hidden" name="csrf_token" id="csrf-token">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="your.name" required autofocus>
@@ -51,12 +52,25 @@
 <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
 <script src="js/main.js"></script>
+<script src="js/customer-auth.js"></script>
 <script>
     // Redirect if already logged in
     fetch('php/auth_check.php')
         .then(r => r.json())
-        .then(d => { if (d.success) window.location.href = 'admin/dashboard.html'; })
+        .then(d => {
+            if (d.success) {
+                window.location.href = d.data.must_change_password
+                    ? 'admin/change-password.html'
+                    : 'admin/dashboard.html';
+            }
+        })
         .catch(() => {});
+
+    // Load CSRF token for the login form
+    (async () => {
+        const token = await getCsrfToken('admin_login');
+        if (token) document.getElementById('csrf-token').value = token;
+    })();
 
     const form     = document.getElementById('login-form');
     const errorEl  = document.getElementById('login-error');
@@ -89,6 +103,9 @@
                 errorEl.classList.add('show');
                 loginBtn.disabled    = false;
                 loginBtn.textContent = 'Sign In';
+                // Refresh CSRF token (the previous one is now consumed/invalid)
+                const newToken = await getCsrfToken('admin_login');
+                if (newToken) document.getElementById('csrf-token').value = newToken;
             }
         } catch {
             errorEl.textContent = 'Network error. Please try again.';

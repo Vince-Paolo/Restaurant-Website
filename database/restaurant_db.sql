@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50)  UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,          -- bcrypt hash
     role     VARCHAR(20)  NOT NULL DEFAULT 'admin',
+    must_change_password TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -64,10 +65,14 @@ CREATE TABLE IF NOT EXISTS orders (
 
 -- ------------------------------------------------------------
 -- Seed: default admin  (password: Admin@1234)
+-- ⚠ SECURITY: this is a well-known placeholder credential. It is
+--   flagged with must_change_password = 1 so the app FORCES a
+--   password change on first login — do not remove that flag
+--   without setting a real, unique password first.
 -- Generate your own with: php -r "echo password_hash('Admin@1234', PASSWORD_DEFAULT);"
 -- ------------------------------------------------------------
-INSERT IGNORE INTO users (username, password, role) VALUES
-('admin', '$2b$12$As3B7RxUJ1tAERC/BV5ENu7wjIbrBjGFfqlXUdyzrtZflrUH6r0Pa', 'admin');
+INSERT IGNORE INTO users (username, password, role, must_change_password) VALUES
+('admin', '$2b$12$As3B7RxUJ1tAERC/BV5ENu7wjIbrBjGFfqlXUdyzrtZflrUH6r0Pa', 'admin', 1);
 
 -- ------------------------------------------------------------
 -- Seed: menu items

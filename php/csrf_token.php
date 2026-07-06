@@ -4,7 +4,7 @@ require 'config.php';
 header('Content-Type: application/json');
 
 $context = clean($_GET['context'] ?? 'form');
-$allowed = ['register', 'customer_login', 'reservation', 'contact'];
+$allowed = ['register', 'customer_login', 'reservation', 'contact', 'admin_login', 'admin_action'];
 if (!in_array($context, $allowed, true)) {
     http_response_code(400);
     json_response(false, null, 'Unknown context.');

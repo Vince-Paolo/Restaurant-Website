@@ -4,6 +4,16 @@ require 'config.php';
 require_admin();
 header('Content-Type: application/json');
 
+// ---- CSRF (state-changing requests only) --------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $csrf = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf($csrf, 'admin_action')) {
+        http_response_code(403);
+        json_response(false, null, 'Invalid or expired form token. Please refresh and try again.');
+        exit();
+    }
+}
+
 $action = clean($_POST['action'] ?? $_GET['action'] ?? '');
 
 switch ($action) {

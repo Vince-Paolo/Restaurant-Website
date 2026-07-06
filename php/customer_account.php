@@ -1,6 +1,6 @@
 <?php
 // php/customer_account.php  —  Fetch logged-in customer's reservations & orders
-session_start();
+require __DIR__ . '/session_init.php';
 require 'config.php';
 require_customer();
 header('Content-Type: application/json');

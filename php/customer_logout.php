@@ -1,6 +1,6 @@
 <?php
 // php/customer_logout.php
-session_start();
+require __DIR__ . '/session_init.php';
 require 'config.php';
 header('Content-Type: application/json');
 

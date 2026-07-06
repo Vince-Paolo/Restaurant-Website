@@ -48,8 +48,12 @@
 </main>
 
 <div class="toast-stack" id="toast-stack"></div>
+<script src="../js/customer-auth.js"></script>
 <script>
-    fetch('../php/auth_check.php').then(r=>r.json()).then(d=>{ if(!d.success) window.location.href='../login.html'; }).catch(()=>window.location.href='../login.html');
+    fetch('../php/auth_check.php').then(r=>r.json()).then(d=>{
+        if(!d.success) window.location.href='../login.html';
+        else if(d.data.must_change_password) window.location.href='change-password.html';
+    }).catch(()=>window.location.href='../login.html');
 
     let currentFilter='';
     function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -98,6 +102,8 @@
 
     async function updateStatus(id,status){
         const fd=new FormData();fd.append('action','update_status');fd.append('id',id);fd.append('status',status);
+        const token = await getCsrfToken('admin_action');
+        if (token) fd.append('csrf_token', token);
         const r=await fetch('../php/admin_orders.php',{method:'POST',body:fd});const d=await r.json();
         d.success?(toast(d.message),load(currentFilter)):toast(d.message,'error');
     }

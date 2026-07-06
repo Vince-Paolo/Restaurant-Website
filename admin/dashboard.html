@@ -98,6 +98,7 @@
         .then(r => r.json())
         .then(d => {
             if (!d.success) { window.location.href = '../login.html'; return; }
+            if (d.data.must_change_password) { window.location.href = 'change-password.html'; return; }
             document.getElementById('greeting').textContent =
                 `Welcome back, ${d.data.username} · ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`;
         })
