@@ -40,7 +40,7 @@ Get a local instance of the restaurant website up and running in seconds:
 
 | Home Page | Interactive Menu | Reservation Form |
 | :---: | :---: | :---: |
-| ![Home Page](assets/images/placeholder_home.jpg) | ![Menu](assets/images/placeholder_menu.jpg) | ![Reservations](assets/images/placeholder_booking.jpg) |
+| ![Home Page](assets/images/preview.png) | ![Menu](assets/images/menu.png) | ![Reservations](assets/images/reservation.png) |
 
 *(Note: Remember to replace these placeholder paths with the actual paths to your project images).*
 
