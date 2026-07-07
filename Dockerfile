@@ -18,5 +18,5 @@ apache2-foreground' > /usr/local/bin/start-apache.sh \
     && chmod +x /usr/local/bin/start-apache.sh
 
 EXPOSE 80
-
+RUN ls -la /etc/apache2/mods-enabled/ | grep mpm
 CMD ["/usr/local/bin/start-apache.sh"]
