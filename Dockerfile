@@ -3,13 +3,15 @@ FROM php:8.2-apache
 # Enable PDO MySQL extension
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Fix "More than one MPM loaded" — force prefork only
-RUN a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork
+# Fix "More than one MPM loaded" — disable event/worker individually, enable prefork
+RUN a2dismod mpm_event || true
+RUN a2dismod mpm_worker || true
+RUN a2enmod mpm_prefork || true
 
 # Copy app files into Apache's web root
 COPY . /var/www/html/
 
-# Use a startup script to substitute $PORT at runtime (build-time sed won't have PORT available)
+# Runtime startup script — substitutes $PORT at container start (not build time)
 RUN echo '#!/bin/bash\n\
 sed -i "s/80/${PORT:-80}/g" /etc/apache2/ports.conf /etc/apache2/sites-enabled/000-default.conf\n\
 apache2-foreground' > /usr/local/bin/start-apache.sh \
