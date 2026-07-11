@@ -21,7 +21,7 @@ services:
   # --- MySQL database ---
   - type: pserv
     name: restaurant-mysql
-    runtime: docker
+    runtime: image
     image:
       url: docker.io/library/mysql:8.0
     plan: starter
