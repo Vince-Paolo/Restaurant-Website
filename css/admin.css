@@ -109,25 +109,6 @@ body {
     animation: fadeInUp 0.45s ease both;
 }
 
-/* On very wide viewports, center the content column in the space
-   remaining after the sidebar instead of leaving it hugging the left */
-@media (min-width: 1600px) {
-    .admin-main {
-        margin-left: calc(232px + (100vw - 232px - 1200px) / 2);
-        margin-right: calc((100vw - 232px - 1200px) / 2);
-    }
-}
-
-/* Laptop / tablet-landscape: sidebar and padding scale down a step
-   before jumping straight to the mobile top-bar layout */
-@media (max-width: 1100px) and (min-width: 861px) {
-    .sidebar { width: 196px; }
-    .sidebar .brand { padding-left: 1.1rem; padding-right: 1.1rem; }
-    .sidebar nav { padding: 0 0.5rem; }
-    .admin-main { margin-left: 196px; padding: 1.75rem 1.5rem; max-width: none; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-}
-
 .admin-header {
     display: flex;
     justify-content: space-between;
@@ -238,23 +219,7 @@ body {
 .panel-header a  { font-size: 0.8rem; color: var(--ember); font-weight: 500; transition: color 0.25s ease; }
 .panel-header a:hover { color: #A93226; }
 
-.table-scroll { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); background: var(--white); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04); }
-/* Right-edge fade hints that a table can be scrolled horizontally on narrow screens */
-.table-scroll::after {
-    content: '';
-    position: sticky;
-    float: right;
-    top: 0; right: 0;
-    width: 22px; height: 100%;
-    margin-left: -22px;
-    pointer-events: none;
-    background: linear-gradient(90deg, rgba(255,255,255,0), var(--white));
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-@media (max-width: 860px) {
-    .table-scroll::after { opacity: 1; }
-}
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); background: var(--white); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04); }
 table { width: 100%; border-collapse: collapse; min-width: 560px; transition: color 0.2s ease; }
 tr { transition: background 0.2s ease; }
 th {
@@ -544,25 +509,6 @@ tr:hover .thumb { transform: scale(1.08); }
     .sidebar .logout { border-top: none; padding: 0 0 0 0.5rem; margin-top: 0; border-left: 1px solid rgba(255,255,255,0.08); }
     .sidebar .logout a span.label { display: none; }
     .admin-main { margin-left: 0; padding: 1.5rem 1.25rem; }
-
-    /* Bigger tap targets once we're on touch-sized viewports */
-    .sidebar nav a,
-    .sidebar .logout a {
-        min-width: 44px;
-        min-height: 44px;
-        justify-content: center;
-        padding: 0.6rem;
-    }
-    .btn-action {
-        padding: 0.5rem 0.85rem;
-        font-size: 0.78rem;
-        min-height: 34px;
-    }
-    .tab {
-        padding: 0.55rem 1.1rem;
-        min-height: 38px;
-    }
-    th, td { padding-top: 0.85rem; padding-bottom: 0.85rem; }
 }
 
 /* ---------------------------------------------------------
@@ -577,9 +523,6 @@ tr:hover .thumb { transform: scale(1.08); }
     .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .stat-card { padding: 1.1rem; }
     .stat-value { font-size: 1.7rem; }
-    /* Odd number of stat cards (e.g. dashboard's 5th card): let the
-       leftover card span full width instead of leaving an empty gap */
-    .stats-grid .stat-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
     .filter-tabs {
         flex-wrap: nowrap;

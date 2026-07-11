@@ -1,0 +1,40 @@
+services:
+  # --- PHP application ---
+  - type: web
+    name: restaurant-website
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    envVars:
+      - key: DB_HOST
+        fromService:
+          name: restaurant-mysql
+          type: pserv
+          property: host
+      - key: DB_NAME
+        value: restaurant_db
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
+
+  # --- MySQL database ---
+  - type: pserv
+    name: restaurant-mysql
+    runtime: docker
+    image:
+      url: docker.io/library/mysql:8.0
+    plan: starter
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - key: MYSQL_DATABASE
+        value: restaurant_db
+      - key: MYSQL_USER
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
