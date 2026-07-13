@@ -19,11 +19,13 @@ services:
         sync: false
 
   # --- MySQL database ---
+  # Builds from Dockerfile.mysql, which bakes the schema + migration in so
+  # they auto-import the first time the container boots with an empty
+  # data directory. No shell/Adminer step needed.
   - type: pserv
     name: restaurant-mysql
-    runtime: image
-    image:
-      url: docker.io/library/mysql:8.0
+    runtime: docker
+    dockerfilePath: ./Dockerfile.mysql
     plan: starter
     disk:
       name: mysql-data

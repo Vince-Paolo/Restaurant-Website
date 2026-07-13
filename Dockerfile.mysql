@@ -1,0 +1,8 @@
+FROM mysql:8.0
+
+# Any .sql (or .sh) file dropped in docker-entrypoint-initdb.d/ is run
+# automatically ONCE, the first time the container starts with an empty
+# data directory. This bakes our schema + migration straight into the image
+# so Render provisions a ready-to-use database with no manual import step.
+COPY database/restaurant_db.sql /docker-entrypoint-initdb.d/1_restaurant_db.sql
+COPY database/migration_customer_auth.sql /docker-entrypoint-initdb.d/2_migration_customer_auth.sql
