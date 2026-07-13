@@ -1,42 +1,39 @@
+databases:
+  # Render's managed Postgres — free tier, no card required for this part.
+  - name: restaurant-postgres
+    databaseName: restaurant_db
+    plan: free
+
 services:
   # --- PHP application ---
   - type: web
     name: restaurant-website
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     envVars:
       - key: DB_HOST
-        fromService:
-          name: restaurant-mysql
-          type: pserv
+        fromDatabase:
+          name: restaurant-postgres
           property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: restaurant-postgres
+          property: port
       - key: DB_NAME
-        value: restaurant_db
+        fromDatabase:
+          name: restaurant-postgres
+          property: database
       - key: DB_USER
-        sync: false
+        fromDatabase:
+          name: restaurant-postgres
+          property: user
       - key: DB_PASS
-        sync: false
-
-  # --- MySQL database ---
-  # Builds from Dockerfile.mysql, which bakes the schema + migration in so
-  # they auto-import the first time the container boots with an empty
-  # data directory. No shell/Adminer step needed.
-  - type: pserv
-    name: restaurant-mysql
-    runtime: docker
-    dockerfilePath: ./Dockerfile.mysql
-    plan: starter
-    disk:
-      name: mysql-data
-      mountPath: /var/lib/mysql
-      sizeGB: 1
-    envVars:
-      - key: MYSQL_DATABASE
-        value: restaurant_db
-      - key: MYSQL_USER
-        sync: false
-      - key: MYSQL_PASSWORD
-        sync: false
-      - key: MYSQL_ROOT_PASSWORD
-        generateValue: true
+        fromDatabase:
+          name: restaurant-postgres
+          property: password
+      # Used by docker-entrypoint.sh to auto-import the schema on boot.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: restaurant-postgres
+          property: connectionString

@@ -5,12 +5,12 @@
 // or in a .env loader. Fallback values shown for local dev.
 // --------------------------------------------------------
 $host    = getenv('DB_HOST')    ?: 'localhost';
+$port    = getenv('DB_PORT')    ?: '5432';
 $db      = getenv('DB_NAME')    ?: 'restaurant_db';
-$user    = getenv('DB_USER')    ?: 'root';
+$user    = getenv('DB_USER')    ?: 'postgres';
 $pass    = getenv('DB_PASS')    ?: '';
-$charset = 'utf8mb4';
 
-$dsn     = "mysql:host=$host;dbname=$db;charset=$charset";
+$dsn     = "pgsql:host=$host;port=$port;dbname=$db";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -78,7 +78,7 @@ function generate_csrf(string $context = 'form'): string {
     if (session_status() === PHP_SESSION_NONE) require __DIR__ . '/session_init.php';
     $token = bin2hex(random_bytes(32));
     // Clean up old tokens (>1 hour) for this context
-    $pdo->prepare('DELETE FROM csrf_tokens WHERE context = ? AND created_at < NOW() - INTERVAL 1 HOUR')
+    $pdo->prepare("DELETE FROM csrf_tokens WHERE context = ? AND created_at < NOW() - INTERVAL '1 hour'")
         ->execute([$context]);
     $pdo->prepare('INSERT INTO csrf_tokens (token, context) VALUES (?, ?)')
         ->execute([$token, $context]);
@@ -89,8 +89,8 @@ function verify_csrf(string $token, string $context = 'form'): bool {
     global $pdo;
     if (!$token) return false;
     $stmt = $pdo->prepare(
-        'SELECT id FROM csrf_tokens WHERE token = ? AND context = ? AND used = 0
-         AND created_at > NOW() - INTERVAL 1 HOUR LIMIT 1'
+        "SELECT id FROM csrf_tokens WHERE token = ? AND context = ? AND used = 0
+         AND created_at > NOW() - INTERVAL '1 hour' LIMIT 1"
     );
     $stmt->execute([$token, $context]);
     $row = $stmt->fetch();
@@ -107,7 +107,7 @@ function is_rate_limited(string $identifier, int $max = 5, int $window_minutes =
     global $pdo;
     $stmt = $pdo->prepare(
         'SELECT COUNT(*) FROM login_attempts
-         WHERE identifier = ? AND attempted_at > NOW() - INTERVAL ? MINUTE'
+         WHERE identifier = ? AND attempted_at > NOW() - make_interval(mins => ?)'
     );
     $stmt->execute([$identifier, $window_minutes]);
     return (int)$stmt->fetchColumn() >= $max;

@@ -1,56 +1,48 @@
-# Deploying to Render
+# Deploying to Render (Postgres edition)
 
-This folder is deploy-ready: `Dockerfile` builds the PHP+Apache app, and
-`render.yaml` is a Blueprint that provisions both the web service and a
-MySQL database together.
+This app was originally built for MySQL and has been converted to run on
+**Postgres**, so it can use Render's free managed database — no credit
+card required.
 
-## Option A — One-click Blueprint (recommended)
+## What changed from the original MySQL version
 
-1. Push this folder to a GitHub repo.
-2. In the Render Dashboard: **New → Blueprint**, and point it at your repo.
-   Render will read `render.yaml` and create two services:
-   - `restaurant-website` — the PHP app (Docker web service)
-   - `restaurant-mysql` — MySQL 8 (Docker private service, with a 1GB
-     persistent disk so data survives restarts/redeploys)
-3. Render will prompt you to fill in the `sync: false` values:
-   `DB_USER`, `DB_PASS` (for the app) and `MYSQL_USER`, `MYSQL_PASSWORD`
-   (for the database) — make these match on both sides.
-   `MYSQL_ROOT_PASSWORD` is auto-generated.
-4. Deploy. `DB_HOST` is wired automatically to the database's internal
-   hostname — you don't need to set it yourself.
+- `php/config.php` — DSN switched from `mysql:` to `pgsql:`, plus a few
+  MySQL-only SQL fragments (`NOW() - INTERVAL 1 HOUR`,
+  `INTERVAL ? MINUTE`) rewritten in Postgres syntax.
+- `php/dashboard_stats.php` — MySQL's `SUM(column=value)` boolean-sum
+  shorthand and `CURDATE()` aren't valid Postgres; rewritten as
+  `SUM(CASE WHEN ... END)` and `CURRENT_DATE`.
+- `database/postgres_schema.sql` — new file: the original
+  `restaurant_db.sql` + `migration_customer_auth.sql`, merged into one
+  Postgres-compatible schema. Idempotent — safe to run repeatedly.
+- `Dockerfile` — now installs `pdo_pgsql` instead of `pdo_mysql`, plus
+  the `psql` client.
+- `docker-entrypoint.sh` — new: runs `postgres_schema.sql` against the
+  database automatically every time the container boots, before Apache
+  starts. Schema creation *is* deployment — no manual import needed.
+- `render.yaml` — now provisions a Render-managed Postgres database
+  (`databases:` block, `plan: free`) instead of a self-hosted MySQL
+  private service. Both the app and database use Render's free tier.
 
-## Import the schema
+## Steps
 
-Once `restaurant-mysql` is live, you still need to create the tables —
-the app doesn't do this automatically:
-
-1. Open the Render Shell for `restaurant-mysql` (or deploy a temporary
-   [Adminer](https://render.com/docs/deploy-mysql#connecting-with-adminer)
-   web service pointed at it).
-2. Run the SQL files in this repo against the `restaurant_db` database,
-   in this order:
-   - `database/restaurant_db.sql`
-   - `database/migration_customer_auth.sql`
-
-## Option B — Manual setup (no Blueprint)
-
-If you'd rather click through the UI instead of using `render.yaml`:
-
-1. **New → Private Service** → Docker → image `mysql:8.0`. Set
-   `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=restaurant_db`, `MYSQL_USER`,
-   `MYSQL_PASSWORD`. Attach a persistent disk mounted at `/var/lib/mysql`
-   (this step is essential — without it your data resets on every deploy).
-2. Import the schema as above.
-3. **New → Web Service** → connect this repo → Runtime: Docker. Set env
-   vars `DB_HOST` (the MySQL private service's internal hostname, shown
-   on its Render page, e.g. `restaurant-mysql:3306`), `DB_NAME`,
-   `DB_USER`, `DB_PASS` to match step 1.
-4. Deploy.
+1. Push this repo (with all the above changes) to GitHub.
+2. Render Dashboard -> New -> Blueprint -> connect your repo.
+   Render reads render.yaml and shows two resources to create:
+   - restaurant-postgres (free Postgres database)
+   - restaurant-website (free web service, Docker)
+3. Click through to deploy. No sync:false prompts this time -- all
+   DB credentials flow automatically via fromDatabase.
+4. Watch the restaurant-website Logs tab during first boot. You
+   should see "Running schema import against Postgres..." followed
+   by "Schema import complete." -- confirms schema + seed data loaded.
+5. Visit your site's Menu page -- items should now show up.
 
 ## Notes
 
-- `temp_*.php` debug/migration scripts have already been removed from
-  this copy — they exposed schema/admin internals and shouldn't ship.
-- The `.htaccess` file blocks direct access to `.sql` files and disables
-  directory listing; the Dockerfile enables `mod_rewrite`/`mod_headers`
-  and `AllowOverride All` so those rules are actually enforced.
+- Default admin login is admin / Admin@1234 -- the app forces a
+  password change on first login. Do this immediately after deploy.
+- Render's free Postgres tier expires after 30 days unless upgraded to
+  a paid plan -- fine for testing, keep in mind for long-term use.
+- temp_*.php debug/migration scripts have already been removed from
+  this copy.
