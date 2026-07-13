@@ -44,7 +44,7 @@ Get a local instance of the restaurant website up and running in seconds:
 
 ## 🔗 Links
 
-*   **Live Demo:** [https://restaurant-website-zxa6.onrender.com/]
+*   **Live Demo:** [https://restaurant-website-3cc6.onrender.com/]
 *   **GitHub Repository:** [(https://github.com/Vince-Paolo/Restaurant-Website)]
 
 ---
